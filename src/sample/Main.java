@@ -34,8 +34,9 @@ public class Main extends Application {
     static GridPane mainGrid=new GridPane();
     static int[] startCordinates=new int[2];
     static int[] currentCordinates=new int[2];
-    static Boolean live=false;   //variable that tracks the state of the game
 
+    static boolean live=false;   //variable that tracks the state of the game
+    static boolean enable8=false; // will help in toggling from one mode to another
 
     public static FileReader fr;
     public static BufferedReader br;
@@ -99,7 +100,23 @@ public class Main extends Application {
                 updateGrid(currentCordinates,prevCordinates);
             }
         }
+        if(enable8){
+            System.out.println("i AM HERE OOO");
+            move8(ke);
+        }
 
+    }
+    public static void move8(KeyEvent ke) throws IOException{
+        if(ke.getCode()==KeyCode.W){
+            if(currentCordinates[0]>0 && currentCordinates[1]<=noColumns-2 &&matrix[currentCordinates[0]-1][currentCordinates[1]+1]!=1 && !visited[currentCordinates[0]-1][currentCordinates[1+1]] ){
+                int[] prevCordinates={currentCordinates[0],currentCordinates[1]};
+                visited[prevCordinates[0]][prevCordinates[1]]=true;
+                currentCordinates[0]=currentCordinates[0]-1;
+                currentCordinates[1]=currentCordinates[1]+1;
+                updateGrid(currentCordinates,prevCordinates);
+            }
+
+        }
     }
 
     private static void updateGrid(int[] currentCordinates, int[] prevCordinates) throws IOException {
@@ -108,7 +125,6 @@ public class Main extends Application {
         if(no!=8 && no !=9){
             grid.add(createImage(imgAlt.get(no)),prevCordinates[1],prevCordinates[0]);
 
-            System.out.println("here babe");
         }
         else if(no==9){
             grid.add(createImage(img.get(9)),prevCordinates[1],prevCordinates[0]);
@@ -261,14 +277,25 @@ public class Main extends Application {
         });
         mainGrid.add(start,0,1);
 
-        Button moveUp=new Button("up");
-        mainGrid.add(moveUp,1,1);
+        Button enable8Btn=new Button("Enable 8 Directions");
+        enable8Btn.setOnAction(new EventHandler<ActionEvent>(){
+            @Override public void handle(ActionEvent e) {
+                if(enable8){
+                    enable8=false;
+                    enable8Btn.setText("Enable 8 Directions");
+                }
+                else{
+                    enable8=true;
+                    enable8Btn.setText("Disable 8 Directions");
+                }
+            }
+
+        });
+        mainGrid.add(enable8Btn,1,1);
 
 
         return mainGrid;
     }
 
+
 }
-
-
-
