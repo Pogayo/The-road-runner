@@ -1,159 +1,273 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import java.awt.*;
+import javafx.scene.control.Button;
+
+import javafx.event.Event;
 import java.io.*;
 import java.io.IOException;
+import java.util.*;
+
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.swing.*;
-
 public class Main extends Application {
+    static int windowWidth=1000;
+    static int windowHeight=600;
+
+    static int noRows=0;
+    static int noColumns=0;
+
+    static GridPane grid=new GridPane();
+
+    static GridPane mainGrid=new GridPane();
+    static int[] startCordinates=new int[2];
+    static int[] currentCordinates=new int[2];
+    static Boolean live=false;   //variable that tracks the state of the game
+
+
     public static FileReader fr;
     public static BufferedReader br;
-    public static String FILENAME="C:\\Users\\Student\\IdeaProjects\\Perez-Ian\\pp-ii-the-road-runner-perez-ian\\src\\sample_test_input_1.txt";
+    public static String FILENAME="C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample_test_input_1.txt";
     public static int[][] matrix;
-
-    //setting variables for the images
-    static String boulderpath="C:\\Users\\Student\\IdeaProjects\\Perez-Ian\\pp-ii-the-road-runner-perez-ian\\Image Files\\boulder.jpg";
-    static String coyetepath="C:\\Users\\Student\\IdeaProjects\\Perez-Ian\\pp-ii-the-road-runner-perez-ian\\Image Files\\coyote.jpg";
-    static String coyetealtpath="C:\\Users\\Student\\IdeaProjects\\Perez-Ian\\pp-ii-the-road-runner-perez-ian\\Image Files\\coyote_alt.jpg";
-
+    public static boolean[][] visited;
+    static HashMap<Integer, String> img=new HashMap<Integer, String>();
+    String prePath="C:\\Users\\Student\\IdeaProjects\\RoadRunner\\src\\Image Files\\";
+    static HashMap<Integer, String> imgAlt=new HashMap<Integer, String>(); //hashmap holding the alternative images
 
 
+    public void populateImg(){   ///roadrunner will be no 7
+        String[] images={"road","boulder","pothole","explosive","coyote","tarred","gold","road_runner","start","goal"};
+        for(int i=0;i<images.length;i++) {
+//            if (i==7){
+//                img.put(7,"C:\\Users\\Student\\IdeaProjects\\RoadRunner\\src\\Image Files\\road_runner.jpg");
+//            }
+            img.put(i, prePath + images[i]+".jpg");
+        }
+        for (int i=0;i<7;i++){
+            if(i==1){
+                continue;
+            }
+            imgAlt.put(i,prePath+images[i]+"_alt.jpg");
+        }
+    }
+    public static void handleKeys(KeyEvent ke) throws  IOException{
+        //if (ke.getCode() == KeyCode.ESCAPE) {
+        System.out.println("Key Pressed: " + ke.getCode());
+
+        //}
+        if(ke.getCode()==KeyCode.UP){  //I am trying to move up
+            if(currentCordinates[0]>0 && matrix[currentCordinates[0]-1][currentCordinates[1]]!=1 && !visited[currentCordinates[0]-1][currentCordinates[1]] ){
+                int[] prevCordinates={currentCordinates[0],currentCordinates[1]};
+                visited[prevCordinates[0]][prevCordinates[1]]=true;
+                currentCordinates[0]=currentCordinates[0]-1;
+                updateGrid(currentCordinates,prevCordinates);
+            }
+        }
+        if(ke.getCode()==KeyCode.DOWN){  //I am trying to move up
+            if(currentCordinates[0]<=noRows-2 && matrix[currentCordinates[0]+1][currentCordinates[1]]!=1 && !visited[currentCordinates[0]+1][currentCordinates[1]]){
+                int[] prevCordinates={currentCordinates[0],currentCordinates[1]};
+                visited[prevCordinates[0]][prevCordinates[1]]=true;
+                currentCordinates[0]=currentCordinates[0]+1;
+                updateGrid(currentCordinates,prevCordinates);
+            }
+        }
+        if(ke.getCode()==KeyCode.LEFT){  //I am trying to move up
+            if(currentCordinates[1]>0 && matrix[currentCordinates[0]][currentCordinates[1]]-1!=1 && !visited[currentCordinates[0]][currentCordinates[1]-1]){
+                int[] prevCordinates={currentCordinates[0],currentCordinates[1]};
+                visited[prevCordinates[0]][prevCordinates[1]]=true;
+                currentCordinates[1]=currentCordinates[1]-1;
+                updateGrid(currentCordinates,prevCordinates);
+            }
+        }
+        if(ke.getCode()==KeyCode.RIGHT){  //I am trying to move up
+            if(currentCordinates[1]<=noColumns-2 && matrix[currentCordinates[0]][currentCordinates[1]+1]!=1 && !visited[currentCordinates[0]][currentCordinates[1]+1]){
+                int[] prevCordinates={currentCordinates[0],currentCordinates[1]};
+                visited[prevCordinates[0]][prevCordinates[1]]=true;
+                currentCordinates[1]=currentCordinates[1]+1;
+                updateGrid(currentCordinates,prevCordinates);
+            }
+        }
+
+    }
+
+    private static void updateGrid(int[] currentCordinates, int[] prevCordinates) throws IOException {
+        int no=matrix[prevCordinates[0]][prevCordinates[1]];
+        System.out.println(no);
+        if(no!=8 && no !=9){
+            grid.add(createImage(imgAlt.get(no)),prevCordinates[1],prevCordinates[0]);
+
+            System.out.println("here babe");
+        }
+        else if(no==9){
+            grid.add(createImage(img.get(9)),prevCordinates[1],prevCordinates[0]);
+        }
+        else if(no==8){
+            grid.add(createImage(img.get(8)),prevCordinates[1],prevCordinates[0]);
+
+        }
+        grid.add(createImage(img.get(7)),currentCordinates[1],currentCordinates[0]);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        populateImg();
+        readFile();
+        primaryStage.setTitle("Road Runner");
 
 
-    //functions
-    public static void readFile() {
+
+        //grid.setGridLinesVisible(true);//for debug purposes
+
+        Scene scene=new Scene(startGame(), windowWidth, windowHeight);
+        //scene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent ke){
+                try{
+                    handleKeys(ke);}
+                catch(Exception e){
+                    System.out.println("We could not update the grid");
+                }
+            }
+
+        });
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    public static void readFile() { // function to read the file
         try {
 
-            //br = new BufferedReader(new FileReader(FILENAME));
             fr = new FileReader(FILENAME);
             br = new BufferedReader(fr);
 
             String sCurrentLine;
             sCurrentLine = br.readLine(); //reading first line
             String[] matrixDescription= sCurrentLine.split(" ");
-            int noRows=Integer.parseInt(matrixDescription[0]);
-            int noColumns=Integer.parseInt(matrixDescription[1]);
+            noRows=Integer.parseInt(matrixDescription[0]);
+            noColumns=Integer.parseInt(matrixDescription[1]);
             System.out.println(noRows);
             System.out.println(noColumns);
 
             //making the 2d array...
             matrix=new int[noRows][noColumns];
+            visited=new boolean[noRows][noColumns];
             int rowCount=0;
 
             while ((sCurrentLine = br.readLine()) != null) {
-                System.out.println(sCurrentLine);
+
                 for(int i=0;i<sCurrentLine.length();i++){
                     matrix[rowCount][i]=Character.getNumericValue(sCurrentLine.charAt(i));
+                    visited[rowCount][i]=false;
+
+                    if(matrix[rowCount][i]==8){
+                        startCordinates[0]=rowCount;
+                        startCordinates[1]=i;
+
+                    }
                 }
                 rowCount++; //incrementing rowcount
             }
             br.close();// closing the file
 
-            for (int[] row:matrix){
-                for(int num:row){
-                    System.out.print(num+" ");
-                }
-                System.out.println();
-            }
+            createEnv();
 
         } catch (IOException e) {
 
             e.printStackTrace();}
+
     }
 
-      public HBox createImage(String imagePath) throws FileNotFoundException{
+    public static HBox createImage(String imagePath) throws FileNotFoundException{
 
 
         String path=imagePath;
-          Image image = new Image(new FileInputStream(path));
-                  //creating image view
-          ImageView imageView = new ImageView(image);
-          //Setting the position of the image
-          //imageView.setX(50);
-          //imageView.setY(25);
+        Image image = new Image(new FileInputStream(path));
+        //creating image view
+        ImageView imageView = new ImageView(image);
+        //setting the fit height and width of the image view
+        imageView.setFitHeight(windowWidth/noRows-50);
+        imageView.setFitWidth(windowHeight/noColumns-50);
+        imageView.getStyleClass().add("imageView");
+        HBox image_container = new HBox();
 
-          //setting the fit height and width of the image view
-          imageView.setFitHeight(100);
-          imageView.setFitWidth(200);
-          imageView.getStyleClass().add("imageView");
-          HBox image_container = new HBox();
+        String style_inner = "-fx-border-color: black;" + "-fx-border-width: 2;" + "-fx-border-style: solid;";
 
-          String style_inner = "-fx-border-color: black;"
-
-                  + "-fx-border-width: 2;"
-
-                  + "-fx-border-style: solid;";
-
-          image_container .setStyle(style_inner);
-          image_container .getChildren().add(imageView);
+        image_container .setStyle(style_inner);
+        image_container .getChildren().add(imageView);
 
 
-          //Setting the preserve ratio of the image view
-          imageView.setPreserveRatio(true);
-          return image_container ;
-      }
-
-      public ButtonGroup  oneMoveButton(){
-        ButtonGroup buttonGroupOne=new ButtonGroup();
-         //up button
-        Button up=new Button("Move up");
-
-        Button left=new Button("Move left");
-
-        Button down=new Button("Move down"); //down button
-
-          Button right=new Button("Move right"); //right button
+        //Setting the preserve ratio of the image view
+        imageView.setPreserveRatio(true);
+        return image_container ;
+    }
 
 
-          buttonGroupOne.getElements();
-
-
-        return  buttonGroupOne;
-      }
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        readFile();
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        //primaryStage.setScene(new Scene(root, 300, 275));
-        GridPane grid = new GridPane();
-        //grid.setGridLinesVisible(true);//for debug purposes
+    //function that will return the grid with the images..initially before the game starts
+    public static GridPane createEnv() throws FileNotFoundException{
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
+        grid.setHgap(5);
+        grid.setVgap(5);
+        for(int i=0;i<noRows;i++){ //for every row
+            for(int j=0;j<noRows;j++){ //for every colum
+                String imagePath=img.get(matrix[i][j]);
+                grid.add(createImage(imagePath),j,i);
+            }
+        }
 
-        grid.setPadding(new Insets(25, 25, 25, 25));
-        //adding the images
-        grid.add(createImage(boulderpath),0,0);
-        grid.add(createImage(coyetepath),1,0);
-        grid.add(createImage(coyetealtpath),0,1);
-        grid.add(createImage(coyetepath),1,1);
+        return grid;
+    }
+    public  GridPane startGame(){
 
-        Scene scene = new Scene(grid, 600, 575);
-        scene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
+        mainGrid.setAlignment(Pos.CENTER);
+        mainGrid.setHgap(10);
+        mainGrid.setVgap(10);
+
+        mainGrid.add(grid,0,0);
+
+        Button start=new Button("Start");
+        start.setOnAction(new EventHandler<ActionEvent>()  {
+            @Override public void handle(ActionEvent e) {
+                //label.setText("Accepted");
+                try{
+                    grid.add(createImage(img.get(7)),startCordinates[1],startCordinates[0]);
+                    currentCordinates=startCordinates; //this is where the road runner is is;
+                    visited[currentCordinates[0]][currentCordinates[1]]=true;
+                    live=true;
+                }
+                catch(Exception E){
+                    System.out.println("Road runner not found");
+                }
+            }
+        });
+        mainGrid.add(start,0,1);
+
+        Button moveUp=new Button("up");
+        mainGrid.add(moveUp,1,1);
+
+
+        return mainGrid;
     }
 
-
-
-    public static void main(String[] args) {
-        launch(args);
-
-    }
 }
 
 
