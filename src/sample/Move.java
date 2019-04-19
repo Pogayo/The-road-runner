@@ -17,61 +17,60 @@ import static sample.Main.noRows;
 
 public class Move {
 
-    public static void handleKeys(KeyEvent ke) throws IOException {
-        //if (ke.getCode() == KeyCode.ESCAPE) {
-        System.out.println("Key Pressed: " + ke.getCode());
+    public static void handleKeys(KeyCode key) throws IOException {
 
-        //}
+        System.out.println("Key Pressed: " + key);
+
         if (live) {
-            if (ke.getCode() == KeyCode.UP) {  //I am trying to move up
+            if (key== KeyCode.UP) {  //I am trying to move up
                 if (currentCordinates[0] > 0 && matrix[currentCordinates[0] - 1][currentCordinates[1]] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1]]) {
                     updateCordGrid(-1, 0);
                 }
             }
-            if (ke.getCode() == KeyCode.DOWN) {  //I am trying to move up
+            if (key == KeyCode.DOWN) {  //I am trying to move up
                 if (currentCordinates[0] <= noRows - 2 && matrix[currentCordinates[0] + 1][currentCordinates[1]] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1]]) {
                     updateCordGrid(1, 0);
                 }
             }
-            if (ke.getCode() == KeyCode.LEFT) {  //I am trying to move up
+            if (key == KeyCode.LEFT) {  //I am trying to move up
                 if (currentCordinates[1] > 0 && matrix[currentCordinates[0]][currentCordinates[1]] - 1 != 1 && !visited[currentCordinates[0]][currentCordinates[1] - 1]) {
                     updateCordGrid(0, -1);
                 }
             }
-            if (ke.getCode() == KeyCode.RIGHT) {  //I am trying to move up
+            if (key == KeyCode.RIGHT) {  //I am trying to move up
                 if (currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0]][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0]][currentCordinates[1] + 1]) {
                     updateCordGrid(0, 1);
                 }
             }
             if (enable8) {
-                move8(ke);
+                move8(key);
             }
         }
 
     }
 
-    public static void move8(KeyEvent ke) throws IOException {
+    public static void move8(KeyCode key) throws IOException {
 
-        if (ke.getCode() == KeyCode.W) {
+        if (key == KeyCode.W) {
             if (currentCordinates[0] > 0 && currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0] - 1][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1] + 1]) {
                 updateCordGrid(-1, +1);
             }
 
         }
 
-        if (ke.getCode() == KeyCode.S) {
+        if (key == KeyCode.S) {
             if (currentCordinates[0] <= noRows - 2 && currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0] + 1][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1] + 1]) {
                 updateCordGrid(1, 1);
             }
 
         }
-        if (ke.getCode() == KeyCode.A) {
+        if (key == KeyCode.A) {
             if (currentCordinates[0] <= noRows - 2 && currentCordinates[1] > 0 && matrix[currentCordinates[0] + 1][currentCordinates[1] - 1] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1] - 1]) {
                 updateCordGrid(1, -1);
             }
 
         }
-        if (ke.getCode() == KeyCode.Q) {
+        if (key == KeyCode.Q) {
             if (currentCordinates[0] > 0 && currentCordinates[1] > 0 && matrix[currentCordinates[0] - 1][currentCordinates[1] - 1] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1] - 1]) {
                 updateCordGrid(-1, -1);
             }
@@ -83,9 +82,24 @@ public class Move {
     //function that updates the cordinates after clicking buttons then updates the grid
     public static void updateCordGrid(int rowChange, int colChange) throws IOException {
         int[] prevCordinates = {currentCordinates[0], currentCordinates[1]};
+        prevGlobal[0]=currentCordinates[0];
+        prevGlobal[1]=currentCordinates[1];
         visited[prevCordinates[0]][prevCordinates[1]] = true;
         currentCordinates[0] = currentCordinates[0] + rowChange;
+
         currentCordinates[1] = currentCordinates[1] + colChange;
+        if(undo.size()==3){
+            undo.remove(0);
+        }
+
+       Integer[] prevClone=new Integer[2];
+       prevClone[0]=prevCordinates[0];
+       prevClone[1]=prevCordinates[1];
+
+        System.out.println("See me");
+        undo.add(prevClone);
+
+
         updateGrid(currentCordinates, prevCordinates);
 
 

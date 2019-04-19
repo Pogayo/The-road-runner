@@ -44,6 +44,7 @@ public class Main extends Application {
     static GridPane mainGrid = new GridPane();
     static int[] startCordinates = new int[2];
     static int[] currentCordinates = new int[2];
+    static int[] prevGlobal=new int[2];
 
     static boolean live = false;   //variable that tracks the state of the game
     static boolean enable8 = false; // will help in toggling from one mode to another
@@ -97,7 +98,7 @@ public class Main extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
                 try {
-                    handleKeys(ke);
+                    handleKeys(ke.getCode());
                 } catch (Exception e) {
                     System.out.println("We could not update the grid");
                 }
@@ -142,7 +143,8 @@ public class Main extends Application {
                     if (matrix[rowCount][i] == 8) {
                         startCordinates[0] = rowCount;
                         startCordinates[1] = i;
-
+                        prevGlobal[0]=startCordinates[0];
+                        prevGlobal[1]=startCordinates[1];
 
                     }
                 }
@@ -261,6 +263,7 @@ public class Main extends Application {
         });
 
         mainGrid.add(undoBtn,1,3);
+        mainGrid.add(redoBtn,0,4);
 
 
         return mainGrid;
@@ -278,6 +281,8 @@ public class Main extends Application {
                 System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
 
                 visited[currentCordinates[0]][currentCordinates[1]] = true;
+
+
                 live = true;
             }
         } catch (Exception E) {
