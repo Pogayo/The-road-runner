@@ -208,21 +208,7 @@ public class Main extends Application {
         start.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                //label.setText("Accepted");
-                try {
-                    if (!live) {
-                       if(gameOver()){
-                        createEnv();
-                       }
-                        grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
-                        System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
-
-                        visited[currentCordinates[0]][currentCordinates[1]] = true;
-                        live = true;
-                    }
-                } catch (Exception E) {
-                    System.out.println("Road runner not found");
-                }
+             handleStart();
             }
         });
         mainGrid.add(start, 0, 1);
@@ -252,26 +238,7 @@ public class Main extends Application {
 
         Button reset = new Button("Reset");
         reset.setOnAction(event -> {
-            try {
-                createEnv();
-                score = 0;
-                scoreUI.setText(String.valueOf(score));
-                gameStateUI.setText("");
-
-                for (int i = 0; i < noRows; i++) {
-                    for (int j = 0; j < noColumns; j++) {
-                        visited[i][j] = false;
-
-                    }
-                }
-                currentCordinates[0] = startCordinates[0]; //this is where the road runner is is;
-                currentCordinates[1] = startCordinates[1]; //this is where the road runner is is;
-
-                live = false;
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            handleReset();
 
         });
 
@@ -280,6 +247,44 @@ public class Main extends Application {
 
         return mainGrid;
     }
+    public static void handleStart(){
+        try {
+            if (!live) {
+                if(gameOver()){
+                    handleReset();  //call reset;
+                }
+                grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
+                System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
 
+                visited[currentCordinates[0]][currentCordinates[1]] = true;
+                live = true;
+            }
+        } catch (Exception E) {
+            System.out.println("Road runner not found");
+        }
+    }
 
+   public static void handleReset(){
+       try {
+           createEnv();
+           score = 0;
+           scoreUI.setText(String.valueOf(score));
+           gameStateUI.setText("");
+
+           for (int i = 0; i < noRows; i++) {
+               for (int j = 0; j < noColumns; j++) {
+                   visited[i][j] = false;
+
+               }
+           }
+           currentCordinates[0] = startCordinates[0]; //this is where the road runner is is;
+           currentCordinates[1] = startCordinates[1]; //this is where the road runner is is;
+
+           live = false;
+
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
+
+   }
 }
