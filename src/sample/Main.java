@@ -25,10 +25,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import sample.Move.*;
 
+
+import static sample.GamePlay.handleRedo;
+import static sample.GamePlay.handleUndo;
 import static sample.Move.gameOver;
 import static sample.Move.handleKeys;
 
 public class Main extends Application {
+    static ArrayList<Integer[]> undo=new ArrayList<>();    //structure to store my moves  for undo purposes
     static int windowWidth = 1000;
     static int windowHeight = 600;
 
@@ -180,7 +184,7 @@ public class Main extends Application {
     }
 
 
-    //function that will return the grid with the images..initially before the game starts
+    //function that will return the grid with the images of the environment
     public static GridPane createEnv() throws FileNotFoundException {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(2);
@@ -242,11 +246,28 @@ public class Main extends Application {
 
         });
 
+
+
         mainGrid.add(reset, 0, 3);
+
+        Button undoBtn=new Button("Undo");
+        undoBtn.setOnAction(event -> {
+            handleUndo();
+        });
+
+        Button redoBtn=new Button("Redo");
+        redoBtn.setOnAction(event -> {
+            handleRedo();
+        });
+
+        mainGrid.add(undoBtn,1,3);
 
 
         return mainGrid;
     }
+
+
+
     public static void handleStart(){
         try {
             if (!live) {
