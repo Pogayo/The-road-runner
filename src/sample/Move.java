@@ -113,11 +113,31 @@ public class Move {
         //checking if game is over
         no = matrix[currentCordinates[0]][currentCordinates[1]];
 
-        if(no==9){
-            gameStateUI.setText("Game Over");
-            live=false;
+        if (no == 9 || gameOver()) {
+            gameStateUI.setText("  Game Over! Reset then click Start to start the game again");
+            live = false;
 
         }
     }
 
+    public static boolean gameOver() {  //to check if the game is over
+
+
+        if ((currentCordinates[0] > 0 && visited[currentCordinates[0] - 1][currentCordinates[1]]) || currentCordinates[0] == 0 ||matrix[currentCordinates[0] - 1][currentCordinates[1]] == 1 ) { //no valid up move
+
+            if ((currentCordinates[0] <= noRows - 2 && visited[currentCordinates[0] + 1][currentCordinates[1]]) || currentCordinates[0] == noRows - 1 || matrix[currentCordinates[0] + 1][currentCordinates[1]] == 1) { //no valid down move
+
+                if ((currentCordinates[1] > 0 && visited[currentCordinates[0]][currentCordinates[1] - 1]) || currentCordinates[1] == 0 || matrix[currentCordinates[0]][currentCordinates[1]] - 1 == 1) { //no valid left  move
+                    if ((currentCordinates[1] <= noColumns - 2 && visited[currentCordinates[0]][currentCordinates[1] + 1]) || currentCordinates[1] == noColumns - 1 ||matrix[currentCordinates[0]][currentCordinates[1] + 1] != 1 ) { //no valid right  move
+
+                        return true;
+                    }
+                }
+
+            }
+
+        }
+        return false;
+
+    }
 }

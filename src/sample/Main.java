@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import sample.Move.*;
 
+import static sample.Move.gameOver;
 import static sample.Move.handleKeys;
 
 public class Main extends Application {
@@ -210,6 +211,9 @@ public class Main extends Application {
                 //label.setText("Accepted");
                 try {
                     if (!live) {
+                       if(gameOver()){
+                        createEnv();
+                       }
                         grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
                         System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
 
