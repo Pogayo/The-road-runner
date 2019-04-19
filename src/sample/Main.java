@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javafx.scene.control.Button;
@@ -42,8 +43,13 @@ public class Main extends Application {
     static boolean live = false;   //variable that tracks the state of the game
     static boolean enable8 = false; // will help in toggling from one mode to another
 
-    static int score=0;
-    static int[] points={-1,0,-2,-4,-8,1,5};
+    static int score = 0;
+    static Text scoreUI;
+    static HBox scoreArea;
+    static Text gameStateUI;
+
+
+    static int[] points = {-1, 0, -2, -4, -8, 1, 5};
 
     public static FileReader fr;
     public static BufferedReader br;
@@ -132,6 +138,7 @@ public class Main extends Application {
                         startCordinates[0] = rowCount;
                         startCordinates[1] = i;
 
+
                     }
                 }
                 rowCount++; //incrementing rowcount
@@ -187,7 +194,7 @@ public class Main extends Application {
         return grid;
     }
 
-    public GridPane startGame() {
+    public GridPane startGame() throws IOException {
 
 
         mainGrid.setAlignment(Pos.CENTER);
@@ -202,10 +209,13 @@ public class Main extends Application {
             public void handle(ActionEvent e) {
                 //label.setText("Accepted");
                 try {
-                    grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
-                    currentCordinates = startCordinates; //this is where the road runner is is;
-                    visited[currentCordinates[0]][currentCordinates[1]] = true;
-                    live = true;
+                    if (!live) {
+                        grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
+                        System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
+
+                        visited[currentCordinates[0]][currentCordinates[1]] = true;
+                        live = true;
+                    }
                 } catch (Exception E) {
                     System.out.println("Road runner not found");
                 }
@@ -227,7 +237,41 @@ public class Main extends Application {
             }
 
         });
+
         mainGrid.add(enable8Btn, 1, 1);
+        Text preScore = new Text("Your score: ");
+        scoreUI = new Text(String.valueOf(score));
+        scoreArea = new HBox();
+        gameStateUI = new Text();
+        scoreArea.getChildren().addAll(preScore, scoreUI, gameStateUI);
+        mainGrid.add(scoreArea, 0, 2, 1, 1);
+
+        Button reset = new Button("Reset");
+        reset.setOnAction(event -> {
+            try {
+                createEnv();
+                score = 0;
+                scoreUI.setText(String.valueOf(score));
+                gameStateUI.setText("");
+
+                for (int i = 0; i < noRows; i++) {
+                    for (int j = 0; j < noColumns; j++) {
+                        visited[i][j] = false;
+
+                    }
+                }
+                currentCordinates[0] = startCordinates[0]; //this is where the road runner is is;
+                currentCordinates[1] = startCordinates[1]; //this is where the road runner is is;
+
+                live = false;
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        mainGrid.add(reset, 0, 3);
 
 
         return mainGrid;

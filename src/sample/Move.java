@@ -2,6 +2,7 @@ package sample;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 
@@ -95,6 +96,8 @@ public class Move {
 
         if (no < 7) {
             score += points[no];
+            scoreUI.setText(String.valueOf(score));
+
         }
         System.out.println(score);
         if (no != 8 && no != 9) {
@@ -106,6 +109,15 @@ public class Move {
 
         }
         grid.add(createImage(img.get(7)), currentCordinates[1], currentCordinates[0]);
+
+        //checking if game is over
+        no = matrix[currentCordinates[0]][currentCordinates[1]];
+
+        if(no==9){
+            gameStateUI.setText("Game Over");
+            live=false;
+
+        }
     }
 
 }
