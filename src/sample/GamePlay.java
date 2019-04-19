@@ -73,12 +73,14 @@ public class GamePlay {
         try {
             Integer[] prev=undo.remove(undo.size()-1);
             grid.add(createImage(img.get(7)), prev[1], prev[0]); //taking it to the previous
-
+            int prevType=matrix[prev[0]][prev[1]];
             //making the current have it's normal image
 
             grid.add(createImage(img.get(matrix[currentCordinates[0]][currentCordinates[1]])), currentCordinates[1], currentCordinates[0]);
             currentCordinates[0]=prev[0];
             currentCordinates[1]=prev[1];
+            score=score-points[prevType];
+            scoreUI.setText(String.valueOf(score));
 
 
         }
