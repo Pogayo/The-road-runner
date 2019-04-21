@@ -10,10 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javafx.scene.control.Button;
-
-import javafx.event.Event;
-
 import java.io.*;
 import java.io.IOException;
 import java.util.*;
@@ -31,7 +27,7 @@ import static sample.Controls.*;
 
 
 public class Main extends Application {
-    static ArrayList<Integer[]> undo=new ArrayList<>();    //structure to store my moves  for undo purposes
+    static ArrayList<Integer[]> undo = new ArrayList<>();    //structure to store my moves  for undo purposes
     static int windowWidth = 1000;
     static int windowHeight = 600;
 
@@ -43,8 +39,8 @@ public class Main extends Application {
     static GridPane mainGrid = new GridPane();  //will hold everything, grid, and the control buttons
     static int[] startCordinates = new int[2];  //where the start is , 0 is row index and 1 is column index
     static int[] currentCordinates = new int[2];  //where the roadrunner is , 0 is row index and 1 is column index
-    static int[] prevGlobal=new int[2]; //variable to help while redoing
-    static ArrayList<Integer> prevUndoforRedo=new ArrayList<Integer>(); //variable to be used when redoing after an undo
+    static int[] prevGlobal = new int[2]; //variable to help while redoing
+    static ArrayList<Integer> prevUndoforRedo = new ArrayList<Integer>(); //variable to be used when redoing after an undo
 
     static boolean live = false;   //variable that tracks the state of the game
     static boolean enable8 = false; // will help in toggling from one mode to another
@@ -55,7 +51,6 @@ public class Main extends Application {
     static Text gameStateUI;
 
     static int[] points = {-1, 0, -2, -4, -8, 1, 5}; //points awarded for each road/surface....ordered according to their indexes
-
 
 
     @Override
@@ -87,51 +82,6 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static void readFile() { // function to read the file
-        try {
-
-            fr = new FileReader(FILENAME);
-            br = new BufferedReader(fr);
-
-            String sCurrentLine;
-            sCurrentLine = br.readLine(); //reading first line
-            String[] matrixDescription = sCurrentLine.split(" ");
-            noRows = Integer.parseInt(matrixDescription[0]);
-            noColumns = Integer.parseInt(matrixDescription[1]);
-            System.out.println(noRows);
-            System.out.println(noColumns);
-
-            //making the 2d array...
-            matrix = new int[noRows][noColumns];
-            visited = new boolean[noRows][noColumns];
-            int rowCount = 0;
-
-            while ((sCurrentLine = br.readLine()) != null) {
-
-                for (int i = 0; i < sCurrentLine.length(); i++) {
-                    matrix[rowCount][i] = Character.getNumericValue(sCurrentLine.charAt(i));
-                    visited[rowCount][i] = false;
-
-                    if (matrix[rowCount][i] == 8) {
-                        startCordinates[0] = rowCount;
-                        startCordinates[1] = i;
-                        prevGlobal[0]=startCordinates[0];
-                        prevGlobal[1]=startCordinates[1];
-
-                    }
-                }
-                rowCount++; //incrementing rowcount
-            }
-            br.close();// closing the file
-
-            createEnv();
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-
-    }
 
     public static HBox createImage(String imagePath) throws FileNotFoundException {
 
@@ -166,7 +116,8 @@ public class Main extends Application {
         populateImgGrid();
         return grid;
     }
-    public static void populateImgGrid() throws FileNotFoundException{  //function that populates the grid with the images at the start or reset
+
+    public static void populateImgGrid() throws FileNotFoundException {  //function that populates the grid with the images at the start or reset
         for (int i = 0; i < noRows; i++) { //for every row
             for (int j = 0; j < noRows; j++) { //for every colum
                 String imagePath = img.get(matrix[i][j]);
@@ -182,58 +133,16 @@ public class Main extends Application {
         mainGrid.setVgap(10);
 
         mainGrid.add(grid, 1, 0);
-        mainGrid.add(getControlGrid(),0,0);
+        mainGrid.add(getControlGrid(), 0, 0);
 
         Text preScore = new Text("Your score: ");
         scoreUI = new Text(String.valueOf(score));
         scoreArea = new HBox();
         gameStateUI = new Text();
         scoreArea.getChildren().addAll(preScore, scoreUI, gameStateUI);
-        mainGrid.add(scoreArea, 0, 2, 1, 1);
+        mainGrid.add(scoreArea, 1, 2, 1, 1);
 
         return mainGrid;
     }
-
-
-
-    public static void handleStart(){
-        try {
-            if (!live) {
-                if(gameOver()){
-                    handleReset();  //call reset;
-                }
-                grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
-                System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
-
-                visited[currentCordinates[0]][currentCordinates[1]] = true;
-                live = true;
-            }
-        } catch (Exception E) {
-            System.out.println("Road runner not found");
-        }
-    }
-
-   public static void handleReset(){
-       try {
-           populateImgGrid();
-           score = 0;
-           scoreUI.setText(String.valueOf(score));
-           gameStateUI.setText("");
-
-           for (int i = 0; i < noRows; i++) {
-               for (int j = 0; j < noColumns; j++) {
-                   visited[i][j] = false;
-
-               }
-           }
-           currentCordinates[0] = startCordinates[0]; //;
-           currentCordinates[1] = startCordinates[1]; //// ;
-
-           live = false;
-
-       } catch (FileNotFoundException e) {
-           e.printStackTrace();
-       }
-
-   }
 }
+

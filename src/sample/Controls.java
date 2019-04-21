@@ -6,6 +6,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
+
 import static sample.Main.*;
 import static sample.Move.*;
 import static sample.GamePlay.*;
@@ -85,7 +87,44 @@ public class Controls {
 
     }
 
+    public static void handleStart(){
+        try {
+            if (!live) {
+                if(gameOver()){
+                    handleReset();  //call reset;
+                }
+                grid.add(createImage(img.get(7)), startCordinates[1], startCordinates[0]);
+                System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
 
+                visited[currentCordinates[0]][currentCordinates[1]] = true;
+                live = true;
+            }
+        } catch (Exception E) {
+            System.out.println("Road runner not found");
+        }
+    }
 
+    public static void handleReset(){
+        try {
+            populateImgGrid();
+            score = 0;
+            scoreUI.setText(String.valueOf(score));
+            gameStateUI.setText("");
 
+            for (int i = 0; i < noRows; i++) {
+                for (int j = 0; j < noColumns; j++) {
+                    visited[i][j] = false;
+
+                }
+            }
+            currentCordinates[0] = startCordinates[0]; //;
+            currentCordinates[1] = startCordinates[1]; //// ;
+
+            live = false;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
