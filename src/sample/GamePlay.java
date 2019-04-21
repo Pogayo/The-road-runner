@@ -3,10 +3,9 @@
 package sample;
 
 import javafx.scene.input.KeyCode;
-import sample.Main.*;
 
 import java.io.IOException;
-
+import static sample.ReadFile.*;
 import static sample.Move.*;
 import static sample.Main.*;
 

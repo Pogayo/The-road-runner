@@ -23,13 +23,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import sample.Move.*;
 
+import static sample.Move.*;  //getting everything from Move
+import static sample.GamePlay.*; //getting everything from Gameplay
+import static sample.ReadFile.*;
+import static sample.Controls.*;
 
-import static sample.GamePlay.handleRedo;
-import static sample.GamePlay.handleUndo;
-import static sample.Move.gameOver;
-import static sample.Move.handleKeys;
 
 public class Main extends Application {
     static ArrayList<Integer[]> undo=new ArrayList<>();    //structure to store my moves  for undo purposes
@@ -39,13 +38,13 @@ public class Main extends Application {
     static int noRows = 0;
     static int noColumns = 0;
 
-    static GridPane grid = new GridPane();
+    static GridPane grid = new GridPane();  //will hold the environment UI
 
-    static GridPane mainGrid = new GridPane();
-    static int[] startCordinates = new int[2];
-    static int[] currentCordinates = new int[2];
-    static int[] prevGlobal=new int[2];
-    static ArrayList<Integer> prevUndoforRedo=new ArrayList<Integer>();
+    static GridPane mainGrid = new GridPane();  //will hold everything, grid, and the control buttons
+    static int[] startCordinates = new int[2];  //where the start is , 0 is row index and 1 is column index
+    static int[] currentCordinates = new int[2];  //where the roadrunner is , 0 is row index and 1 is column index
+    static int[] prevGlobal=new int[2]; //variable to help while redoing
+    static ArrayList<Integer> prevUndoforRedo=new ArrayList<Integer>(); //variable to be used when redoing after an undo
 
     static boolean live = false;   //variable that tracks the state of the game
     static boolean enable8 = false; // will help in toggling from one mode to another
@@ -55,34 +54,9 @@ public class Main extends Application {
     static HBox scoreArea;
     static Text gameStateUI;
 
-
-    static int[] points = {-1, 0, -2, -4, -8, 1, 5};
-
-    public static FileReader fr;
-    public static BufferedReader br;
-    public static String FILENAME = "C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample_test_input_1.txt";
-    public static int[][] matrix;
-    public static boolean[][] visited;
-    static HashMap<Integer, String> img = new HashMap<Integer, String>();
-    String prePath = "C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\Image Files\\";
-    static HashMap<Integer, String> imgAlt = new HashMap<Integer, String>(); //hashmap holding the alternative images
+    static int[] points = {-1, 0, -2, -4, -8, 1, 5}; //points awarded for each road/surface....ordered according to their indexes
 
 
-    public void populateImg() {   ///roadrunner will be no 7
-        String[] images = {"road", "boulder", "pothole", "explosive", "coyote", "tarred", "gold", "road_runner", "start", "goal"};
-        for (int i = 0; i < images.length; i++) {
-//            if (i==7){
-//                img.put(7,"C:\\Users\\Student\\IdeaProjects\\RoadRunner\\src\\Image Files\\road_runner.jpg");
-//            }
-            img.put(i, prePath + images[i] + ".jpg");
-        }
-        for (int i = 0; i < 7; i++) {
-            if (i == 1) {
-                continue;
-            }
-            imgAlt.put(i, prePath + images[i] + "_alt.jpg");
-        }
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -187,82 +161,35 @@ public class Main extends Application {
     //function that will return the grid with the images of the environment
     public static GridPane createEnv() throws FileNotFoundException {
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(2);
-        grid.setVgap(2);
+        grid.setHgap(1);
+        grid.setVgap(1);
+        populateImgGrid();
+        return grid;
+    }
+    public static void populateImgGrid() throws FileNotFoundException{  //function that populates the grid with the images at the start or reset
         for (int i = 0; i < noRows; i++) { //for every row
             for (int j = 0; j < noRows; j++) { //for every colum
                 String imagePath = img.get(matrix[i][j]);
                 grid.add(createImage(imagePath), j, i);
             }
         }
-
-        return grid;
     }
 
     public GridPane startGame() throws IOException {
-
 
         mainGrid.setAlignment(Pos.CENTER);
         mainGrid.setHgap(10);
         mainGrid.setVgap(10);
 
-        mainGrid.add(grid, 0, 0);
+        mainGrid.add(grid, 1, 0);
+        mainGrid.add(getControlGrid(),0,0);
 
-        Button start = new Button("Start");
-        start.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-             handleStart();
-            }
-        });
-        mainGrid.add(start, 0, 1);
-
-        Button enable8Btn = new Button("Enable 8 Directions");
-        enable8Btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                if (enable8) {
-                    enable8 = false;
-                    enable8Btn.setText("Enable 8 Directions");
-                } else {
-                    enable8 = true;
-                    enable8Btn.setText("Disable 8 Directions");
-                }
-            }
-
-        });
-
-        mainGrid.add(enable8Btn, 1, 1);
         Text preScore = new Text("Your score: ");
         scoreUI = new Text(String.valueOf(score));
         scoreArea = new HBox();
         gameStateUI = new Text();
         scoreArea.getChildren().addAll(preScore, scoreUI, gameStateUI);
         mainGrid.add(scoreArea, 0, 2, 1, 1);
-
-        Button reset = new Button("Reset");
-        reset.setOnAction(event -> {
-            handleReset();
-
-        });
-
-
-
-        mainGrid.add(reset, 0, 3);
-
-        Button undoBtn=new Button("Undo");
-        undoBtn.setOnAction(event -> {
-            handleUndo();
-        });
-
-        Button redoBtn=new Button("Redo");
-        redoBtn.setOnAction(event -> {
-            handleRedo();
-        });
-
-        mainGrid.add(undoBtn,1,3);
-        mainGrid.add(redoBtn,0,4);
-
 
         return mainGrid;
     }
@@ -279,8 +206,6 @@ public class Main extends Application {
                 System.arraycopy(startCordinates, 0, currentCordinates, 0, startCordinates.length);
 
                 visited[currentCordinates[0]][currentCordinates[1]] = true;
-
-
                 live = true;
             }
         } catch (Exception E) {
@@ -290,7 +215,7 @@ public class Main extends Application {
 
    public static void handleReset(){
        try {
-           createEnv();
+           populateImgGrid();
            score = 0;
            scoreUI.setText(String.valueOf(score));
            gameStateUI.setText("");
@@ -301,8 +226,8 @@ public class Main extends Application {
 
                }
            }
-           currentCordinates[0] = startCordinates[0]; //this is where the road runner is is;
-           currentCordinates[1] = startCordinates[1]; //this is where the road runner is is;
+           currentCordinates[0] = startCordinates[0]; //;
+           currentCordinates[1] = startCordinates[1]; //// ;
 
            live = false;
 

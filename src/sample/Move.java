@@ -5,15 +5,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-
-import static sample.Main.currentCordinates;
-import static sample.Main.visited;
-import static sample.Main.matrix;
-import static sample.Main.enable8;
 import static sample.Main.*;
-
-import static sample.Main.noColumns;
-import static sample.Main.noRows;
+import static sample.ReadFile.*;
 
 public class Move {
 
