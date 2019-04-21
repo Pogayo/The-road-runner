@@ -15,11 +15,22 @@ import static sample.Main.*;
 
 public class GamePlay {
     public static void handleRedo() {
-     //
-        int colchange=currentCordinates[1]-prevGlobal[1];
-        int rowchange=currentCordinates[0]-prevGlobal[0];
+        int colchange;
+        int rowchange;
+        if(!prevUndoforRedo.isEmpty()){
+            rowchange=(prevUndoforRedo.get(0)-currentCordinates[0]);
+            colchange=(prevUndoforRedo.get(1)-currentCordinates[1]);
+            prevUndoforRedo.clear();//clearing everything
+
+
+        }
+        else {
+            colchange = currentCordinates[1] - prevGlobal[1];
+            rowchange = currentCordinates[0] - prevGlobal[0];
+        }
         try {
-        if(colchange==1){
+
+            if(colchange==1){
             if(rowchange==1){
                 handleKeys(KeyCode.S);
             }
@@ -55,7 +66,7 @@ public class GamePlay {
         }
         //updateCordGrid(rowchange,colchange);
         } catch (IOException e) {
-            System.out.println("It did not work");
+            System.out.println("Redo Failed");
             e.printStackTrace();
         }
 
@@ -75,17 +86,24 @@ public class GamePlay {
             grid.add(createImage(img.get(7)), prev[1], prev[0]); //taking it to the previous
             int prevType=matrix[prev[0]][prev[1]];
             //making the current have it's normal image
-
             grid.add(createImage(img.get(matrix[currentCordinates[0]][currentCordinates[1]])), currentCordinates[1], currentCordinates[0]);
+
+            prevUndoforRedo.clear();
+            prevUndoforRedo.add(0,currentCordinates[0]);
+            prevUndoforRedo.add(1,currentCordinates[1]);
+
+            visited[currentCordinates[0]][currentCordinates[1]]=false; //making sure it is marked as  not visited
+
             currentCordinates[0]=prev[0];
             currentCordinates[1]=prev[1];
+
             score=score-points[prevType];
             scoreUI.setText(String.valueOf(score));
 
 
         }
         catch(Exception E){
-            System.out.println("Whoops!");
+            System.out.println("Whoops! Undo failed");
         }
 
     }

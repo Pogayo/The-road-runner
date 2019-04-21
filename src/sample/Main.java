@@ -45,6 +45,7 @@ public class Main extends Application {
     static int[] startCordinates = new int[2];
     static int[] currentCordinates = new int[2];
     static int[] prevGlobal=new int[2];
+    static ArrayList<Integer> prevUndoforRedo=new ArrayList<Integer>();
 
     static boolean live = false;   //variable that tracks the state of the game
     static boolean enable8 = false; // will help in toggling from one mode to another
@@ -59,11 +60,11 @@ public class Main extends Application {
 
     public static FileReader fr;
     public static BufferedReader br;
-    public static String FILENAME = "/home/engineersticity/IdeaProjects/programs/practice/pp-ii-the-road-runner-perez-ian/src/sample_test_input_1.txt";
+    public static String FILENAME = "C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample_test_input_1.txt";
     public static int[][] matrix;
     public static boolean[][] visited;
     static HashMap<Integer, String> img = new HashMap<Integer, String>();
-    String prePath = "/home/engineersticity/IdeaProjects/programs/practice/pp-ii-the-road-runner-perez-ian/Image Files/";
+    String prePath = "C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\Image Files\\";
     static HashMap<Integer, String> imgAlt = new HashMap<Integer, String>(); //hashmap holding the alternative images
 
 
@@ -90,10 +91,7 @@ public class Main extends Application {
         primaryStage.setTitle("Road Runner");
 
 
-        //grid.setGridLinesVisible(true);//for debug purposes
-
         Scene scene = new Scene(startGame(), windowWidth, windowHeight);
-        //scene.getStylesheets().add(getClass().getResource("app.css").toExternalForm());
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
