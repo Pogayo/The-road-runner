@@ -92,12 +92,11 @@ public class Main extends Application {
 
         String path = imagePath;
         Image image = new Image(new FileInputStream(path));
-        //creating image view
-        ImageView imageView = new ImageView(image);
-        //addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-        //setting the fit height and width of the image view
-        imageView.setFitHeight(windowWidth / noRows - 50);
-        imageView.setFitWidth(windowHeight / noColumns - 50);
+
+        ImageView imageView = new ImageView(image);  //creating image view
+
+        imageView.setFitHeight(windowWidth / noRows - 30);  //setting the fit height and width of the image view
+        imageView.setFitWidth(windowHeight / noColumns - 30);
         imageView.getStyleClass().add("imageView");
         HBox image_container = new HBox();
         image_container.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClickHandler);
@@ -117,10 +116,9 @@ public class Main extends Application {
         @Override
         public void handle(MouseEvent e) {
             HBox source = (HBox) e.getSource() ;
-            int row=grid.getRowIndex(source);
-            int col=grid.getColumnIndex(source);
+            int row=GridPane.getRowIndex(source);
+            int col=GridPane.getColumnIndex(source);
             System.out.println("Row: "+row+"\nCol: "+ col);
-            System.out.println("I have been clicked");
             if(setNewStart) {
                 setNewStart(row, col);
             }
@@ -128,12 +126,16 @@ public class Main extends Application {
     };
 
     private static void setNewStart(int row,int col) {
+        try {
         matrix[startCordinates[0]][startCordinates[1]]=matrix[row][col];
+        String imagePath = img.get(matrix[startCordinates[0]][startCordinates[1]]);
+        grid.add(createImage(imagePath), startCordinates[1],startCordinates[0]);
         startCordinates[0]=row;
         startCordinates[1]=col;
         matrix[row][col]=8;
-        try {
-            createEnv();
+        imagePath = img.get(matrix[row][col]);
+        grid.add(createImage(imagePath), col, row);
+        //createEnv();
             setNewStart=false;  //making it false so that you will have to click the set new start button for it to work
 
         } catch (FileNotFoundException e) {
