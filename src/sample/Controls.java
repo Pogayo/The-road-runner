@@ -79,6 +79,14 @@ public class Controls {
 
         Button setNewStart=new Button ("Set New Start");
         controlGrid.add(setNewStart, 0, 5);
+        setNewStart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                setNewStartVariable();
+            }
+
+
+        });
 
         Button loadNewMap=new Button ("Load New Map");
         controlGrid.add(loadNewMap, 0, 6);
@@ -91,6 +99,10 @@ public class Controls {
 
         return controlGrid;
 
+    }
+
+    private static void setNewStartVariable() {
+        setNewStart=true;
     }
 
     private static void handleLoadNewMap() {

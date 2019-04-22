@@ -44,6 +44,8 @@ public class Main extends Application {
     static int[] prevGlobal = new int[2]; //variable to help while redoing
     static ArrayList<Integer> prevUndoforRedo = new ArrayList<Integer>(); //variable to be used when redoing after an undo
 
+    static boolean setNewStart=false;
+
     static boolean live = false;   //variable that tracks the state of the game
     static boolean enable8 = false; // will help in toggling from one mode to another
 
@@ -119,8 +121,26 @@ public class Main extends Application {
             int col=grid.getColumnIndex(source);
             System.out.println("Row: "+row+"\nCol: "+ col);
             System.out.println("I have been clicked");
+            if(setNewStart) {
+                setNewStart(row, col);
+            }
         }
     };
+
+    private static void setNewStart(int row,int col) {
+        matrix[startCordinates[0]][startCordinates[1]]=matrix[row][col];
+        startCordinates[0]=row;
+        startCordinates[1]=col;
+        matrix[row][col]=8;
+        try {
+            createEnv();
+            setNewStart=false;  //making it false so that you will have to click the set new start button for it to work
+
+        } catch (FileNotFoundException e) {
+            System.out.println("something wrong happened");
+            e.printStackTrace();
+        }
+    }
 
 
     //function that will return the grid with the images of the environment

@@ -68,7 +68,9 @@ public class ReadFile {
 
                     }
                 }
-                rowCount++; //incrementing rowcount
+                if(rowCount<noRows-1){
+                      rowCount++; //incrementing rowcount
+                }
             }
             br.close();// closing the file
 
