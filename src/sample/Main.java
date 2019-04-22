@@ -3,9 +3,11 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -90,11 +92,13 @@ public class Main extends Application {
         Image image = new Image(new FileInputStream(path));
         //creating image view
         ImageView imageView = new ImageView(image);
+        //addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         //setting the fit height and width of the image view
         imageView.setFitHeight(windowWidth / noRows - 50);
         imageView.setFitWidth(windowHeight / noColumns - 50);
         imageView.getStyleClass().add("imageView");
         HBox image_container = new HBox();
+        image_container.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClickHandler);
 
         String style_inner = "-fx-border-color: black;" + "-fx-border-width: 2;" + "-fx-border-style: solid;";
 
@@ -106,6 +110,17 @@ public class Main extends Application {
         imageView.setPreserveRatio(true);
         return image_container;
     }
+
+    static EventHandler<MouseEvent> imageClickHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent e) {
+            HBox source = (HBox) e.getSource() ;
+            int row=grid.getRowIndex(source);
+            int col=grid.getColumnIndex(source);
+            System.out.println("Row: "+row+"\nCol: "+ col);
+            System.out.println("I have been clicked");
+        }
+    };
 
 
     //function that will return the grid with the images of the environment
