@@ -118,6 +118,7 @@ public class Main extends Application {
     }
 
     public static void populateImgGrid() throws FileNotFoundException {  //function that populates the grid with the images at the start or reset
+        System.out.println("No rows:"+noRows);
         for (int i = 0; i < noRows; i++) { //for every row
             for (int j = 0; j < noRows; j++) { //for every colum
                 String imagePath = img.get(matrix[i][j]);

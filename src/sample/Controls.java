@@ -79,12 +79,24 @@ public class Controls {
 
         Button loadNewMap=new Button ("Load New Map");
         controlGrid.add(loadNewMap, 0, 6);
+        loadNewMap.setOnAction(event -> {
+            handleLoadNewMap();
+        });
 
         Button changeWeights = new Button("Change Weights");
         controlGrid.add(changeWeights, 0, 7);
 
         return controlGrid;
 
+    }
+
+    private static void handleLoadNewMap() {
+        FILENAME="C:\\Users\\user pc\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample\\sample_input.txt";
+        GridPane oldGrid=grid;
+        grid=new GridPane();
+        readFile();
+        mainGrid.getChildren().remove(oldGrid);//removing the old grid
+        mainGrid.add(grid, 1, 0);
     }
 
     public static void handleStart(){
