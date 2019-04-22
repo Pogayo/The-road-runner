@@ -12,13 +12,13 @@ public class ReadFile {
 
     public static FileReader fr;
     public static BufferedReader br;
-    public static String FILENAME = "C:\\Users\\user pc\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample_test_input_1.txt";
+    public static String FILENAME = "C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample_test_input_1.txt";
 
     public static int[][] matrix;
     public static boolean[][] visited;
 
     static HashMap<Integer, String> img = new HashMap<Integer, String>();//hashmap holding the main images for the environment
-    static String prePath = "C:\\Users\\user pc\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\Image Files\\";
+    static String prePath = "C:\\Users\\Student\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\Image Files\\";
     static HashMap<Integer, String> imgAlt = new HashMap<Integer, String>(); //hashmap holding the alternative images
 
 

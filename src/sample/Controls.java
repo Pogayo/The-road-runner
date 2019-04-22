@@ -1,11 +1,14 @@
 package sample;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import static sample.Main.*;
@@ -91,12 +94,25 @@ public class Controls {
     }
 
     private static void handleLoadNewMap() {
-        FILENAME="C:\\Users\\user pc\\IdeaProjects\\pp-ii-the-road-runner-perez-ian\\src\\sample\\sample_input.txt";
+
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            FILENAME=selectedFile.getAbsolutePath();
+            System.out.println("File selected: " + selectedFile.getAbsolutePath());
+        }
+        else {
+            System.out.println("An error ocurred or file selection was cancelled");
+
+            return;
+        }
         GridPane oldGrid=grid;
         grid=new GridPane();
         readFile();
         mainGrid.getChildren().remove(oldGrid);//removing the old grid
         mainGrid.add(grid, 1, 0);
+
     }
 
     public static void handleStart(){
