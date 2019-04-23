@@ -2,7 +2,7 @@ package sample;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -10,11 +10,14 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.util.Optional;
 
 import static sample.Main.*;
 import static sample.Move.*;
 import static sample.GamePlay.*;
 import static sample.ReadFile.*;
+import static sample.Weights.*;
 
 
 public class Controls {
@@ -95,17 +98,52 @@ public class Controls {
         });
 
         Button changeWeights = new Button("Change Weights");
+        changeWeights.setOnAction(event -> {
+            handleChangeWeights();
+        });
+
         controlGrid.add(changeWeights, 0, 7);
+
 
         return controlGrid;
 
     }
 
-    private static void setNewStartVariable() {
+    private static void handleChangeWeights() {
+        Dialog<Integer[]> dialog = new Dialog<>();
+        dialog.setTitle("Change weights");
+        dialog.setHeaderText("Please specify the weights of your environment");
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialogPane.setContent(changeWeightsScreen());
+        dialog.setResultConverter((ButtonType button) -> {
+            if (button == ButtonType.OK) {
+                Integer[] result=new Integer[pointInput.length]; //should handle the error when somebody does not enter  number
+                for (int i=0;i<pointInput.length;i++){
+                    if(i==1){
+                        continue;
+                    }
+                    result[i]=Integer.parseInt(pointInput[i].getText());
+                    points[i]=result[i];
+
+                }
+                for(int num:points){
+                    System.out.println(num);
+                }
+
+                return result;
+            }
+            return null;
+        });
+        Optional<Integer[]> optionalResult = dialog.showAndWait();
+
+    }
+
+    public static void setNewStartVariable() {
         setNewStart=true;
     }
 
-    private static void handleLoadNewMap() {
+    public static void handleLoadNewMap() {
 
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(null);
@@ -124,6 +162,7 @@ public class Controls {
         readFile();
         mainGrid.getChildren().remove(oldGrid);//removing the old grid
         mainGrid.add(grid, 1, 0);
+        live=false; //making sure you can't play till you click start
 
     }
 

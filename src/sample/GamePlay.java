@@ -74,6 +74,7 @@ public class GamePlay {
     public static void handleUndo() {
 
         if(undo.size()>0){
+            live=true;
             goBack();
         }
 
