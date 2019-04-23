@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SquareGraph {
+public class Graph {
 
     private Node[][] map;
     private Point startPosition;
@@ -14,7 +14,7 @@ public class SquareGraph {
     private Heap<Node> openNodes;
     private Set<Node> closedNodes;
 
-    public SquareGraph(int noRows, int noCols){
+    public Graph(int noRows, int noCols){
         map = new Node[noRows][noCols];
         startPosition = new Point();
         targetPosition = new Point();
@@ -106,6 +106,16 @@ public class SquareGraph {
             System.out.println("node : (" + node.getX() + "," + node.getY() + ")");
         }
     }
+    public int[][] getPathCoord(ArrayList<Node> path){ //method that will return  an array of the indexes
+        int[][] result=new int[path.size()][2];
+        for(int i=0; i<path.size(); i++){
+            Node node = path.get(i);
+            result[i][0]=node.getX();
+            result[i][1]=node.getY();
+            //System.out.println("node : (" + node.getX() + "," + node.getY() + ")");
+        }
+        return result;
+    }
 
     public ArrayList<Node> executeAStar(){
         Node start = getMapCell(getStartPosition());
@@ -117,7 +127,9 @@ public class SquareGraph {
         while(!openNodes.isEmpty()){
             Node current = popBestOpenNode();
             if(current.equals(target)){
-                return reconstructPath(target);
+                ArrayList<Node> path=reconstructPath(target);
+                path.add(target);
+                return path;
             }
 
             addToClosedNodes(current);

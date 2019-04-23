@@ -108,6 +108,8 @@ public class Move {
         }
         System.out.println(score);
         if (no != 8 && no != 9) {
+            System.out.println("I am in");
+            System.out.println(no);
             grid.add(createImage(imgAlt.get(no)), prevCordinates[1], prevCordinates[0]);
         } else if (no == 9) {
             grid.add(createImage(img.get(9)), prevCordinates[1], prevCordinates[0]);

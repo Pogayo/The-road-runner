@@ -5,14 +5,14 @@ import java.io.*;
 
 public class InputHandler {
 
-    public SquareGraph readMap(int[][] matrix) throws IOException, InvalidLetterException{
+    public Graph readMap(int[][] matrix) throws IOException, InvalidLetterException{
 
         try{
 
             int rows=matrix.length;
             int cols=matrix[0].length;
 
-            SquareGraph graph = new SquareGraph(rows,cols);
+            Graph graph = new Graph(rows,cols);
             for(int i=0; i<rows; i++){
                 for(int j=0; j<cols; j++){
                     int typeSymbol = matrix[i][j];

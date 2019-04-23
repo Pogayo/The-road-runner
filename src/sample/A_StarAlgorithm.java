@@ -3,13 +3,9 @@ package sample;
 
 
 
-import java.awt.Point;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import static sample.Main.*;
-import static sample.ReadFile.matrix;
 
 public class A_StarAlgorithm {
 
@@ -19,7 +15,7 @@ public class A_StarAlgorithm {
 
            int[][] mymatrix={{1,2,0,9}, {0,0,0,3}, {6,0,4,5}, {0,8,0,5}};
             InputHandler handler = new InputHandler();
-            SquareGraph graph = handler.readMap(mymatrix);
+            Graph graph = handler.readMap(mymatrix);
 
             ArrayList<Node> path = graph.executeAStar();
 
