@@ -123,8 +123,12 @@ public class Controls {
                     if(i==1){
                         continue;
                     }
+                    try{
                     result[i]=Integer.parseInt(pointInput[i].getText());
-                    points[i]=result[i];
+                    points[i]=result[i];}
+                    catch(Exception E){
+                        System.out.println("You entered a non-number "+pointInput[i].getText());
+                    }
 
                 }
                 for(int num:points){
@@ -138,7 +142,6 @@ public class Controls {
         Optional<Integer[]> optionalResult = dialog.showAndWait();
 
     }
-
     public static void setNewStartVariable() {
         setNewStart=true;
     }
