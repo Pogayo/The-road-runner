@@ -1,5 +1,4 @@
 package sample;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -10,7 +9,6 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static sample.Main.*;
@@ -129,12 +127,10 @@ public class Controls {
                     catch(Exception E){
                         System.out.println("You entered a non-number "+pointInput[i].getText());
                     }
-
                 }
                 for(int num:points){
                     System.out.println(num);
                 }
-
                 return result;
             }
             return null;

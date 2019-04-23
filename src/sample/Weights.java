@@ -8,22 +8,12 @@ import javafx.scene.text.Text;
 public class Weights {
     static GridPane changeWGrid=new GridPane();
 
-    static String[] roadsS={"road", "boulder", "pothole", "explosive", "coyote", "tarred", "gold"};
+    static String[] roadsS={"Road", "Boulder", "Pothole", "Explosive", "Coyote", "Tarred", "Gold"};
     static TextField[] pointInput=new TextField[roadsS.length];
-
-//    The Ordinary Road
-//    The Pothole
-//    The Explosive
-//    The Coyote
-//    The Tarred Road
-//    The Gold Road
-
 
     public static GridPane changeWeightsScreen(){
         changeWGrid.setVgap(5);
         changeWGrid.setHgap(5);
-
-        //changeWGrid.add("Ordinary");
         for(int i=0;i<roadsS.length;i++){
             if(i==1){
                 continue;
