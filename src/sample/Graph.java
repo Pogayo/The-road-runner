@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static sample.Main.enable8;
+
 public class Graph {
 
     private Node[][] map;
@@ -68,17 +70,43 @@ public class Graph {
         return ( (p.getX() >= 0) && (p.getX() < getDimension())  && (p.getY() >= 0) && (p.getY() < getDimension()) );
     }
 
-    public Set<Node> getNeighbours(Node n){
+    public Set<Node> getNeighbours(Node n){  //will return different results based on the situation of enabled 8
         Set<Node> neighbours = new HashSet<Node>();
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                if( !(i==0 && j==0) )
-                    if(isInsideMap(new Point(n.getX() + i,n.getY() + j))){
-                        Node temp = getMapCell(new Point(n.getX() + i,n.getY() +  j));
+        //IF ENABLE EIGHT ...
+        if(enable8) {
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    if (!(i == 0 && j == 0))
+                        if (isInsideMap(new Point(n.getX() + i, n.getY() + j))) {
+                            Node temp = getMapCell(new Point(n.getX() + i, n.getY() + j));
+                            if (!temp.isObstacle())
+                                neighbours.add(temp);
+                        }
+
+                }
+            }
+        }
+        //IF 8 IS NOT ENABLED
+        if(!enable8){
+            for(int i=-1; i<=1; i++){ //columns
+                if(!(i==0)){
+                    if(isInsideMap(new Point(n.getX() ,n.getY() + i))){
+                        Node temp = getMapCell(new Point(n.getX() ,n.getY() +  i));
                         if(!temp.isObstacle())
                             neighbours.add(temp);
                     }
 
+                }
+            }
+            for(int i=-1; i<=1; i++){ //columns
+                if(!(i==0)){
+                    if(isInsideMap(new Point(n.getX()+i ,n.getY() ))){
+                        Node temp = getMapCell(new Point(n.getX()+i ,n.getY() ));
+                        if(!temp.isObstacle())
+                            neighbours.add(temp);
+                    }
+
+                }
             }
         }
         return neighbours;
@@ -183,6 +211,15 @@ public class Graph {
             }
         }
         return null;
+
+    }
+    public ArrayList<Node> executeDijkstras(){
+
+        Node start = getMapCell(getStartPosition());
+        Node target = getMapCell(getTargetPosition());
+
+        addToOpenNodes(start);
+        return new ArrayList<Node>();
 
     }
 
