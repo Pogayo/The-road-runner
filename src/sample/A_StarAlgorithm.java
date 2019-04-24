@@ -15,7 +15,8 @@ public class A_StarAlgorithm {
 
            int[][] mymatrix={{1,2,0,9}, {0,0,0,3}, {6,0,4,5}, {0,8,0,5}};
             InputHandler handler = new InputHandler();
-            Graph graph = handler.readMap(mymatrix);
+            int[] current={2,1};
+            Graph graph = handler.readMap(mymatrix,current);
 
             ArrayList<Node> path = graph.executeDFS();
 

@@ -106,19 +106,26 @@ public class Controls {
 
         controlGrid.add(changeWeights, 0, 7);
 
-        Button Astar = new Button("Use A*");
+        Button Astar = new Button("Solve with A*");
         Astar.setOnAction(event -> {
             handleAstar();
         });
 
         controlGrid.add(Astar, 0, 8);
 
-        Button DFS = new Button("Use DFS");
+        Button DFS = new Button("Solve with DFS");
         DFS.setOnAction(event -> {
             handleDFS();
         });
 
         controlGrid.add(DFS, 0, 9);
+
+        Button djikstra = new Button("Solve with Djikstra");
+        djikstra.setOnAction(event -> {
+           // handleDFS();
+        });
+
+        controlGrid.add(djikstra, 0, 10);
 
 
 
@@ -131,7 +138,7 @@ public class Controls {
         InputHandler handler = new InputHandler();
         Graph graph = null;
         try {
-            graph = handler.readMap(mymatrix);
+            graph = handler.readMap(mymatrix,currentCordinates);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidLetterException e) {
@@ -172,7 +179,7 @@ public class Controls {
         InputHandler handler = new InputHandler();
         Graph graph = null;
         try {
-            graph = handler.readMap(mymatrix);
+            graph = handler.readMap(mymatrix,currentCordinates);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidLetterException e) {

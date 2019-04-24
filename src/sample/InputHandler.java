@@ -5,14 +5,14 @@ import java.io.*;
 
 public class InputHandler {
 
-    public Graph readMap(int[][] matrix) throws IOException, InvalidLetterException{
+    public Graph readMap(int[][] matrix,int[] current) throws IOException, InvalidLetterException{
 
         try{
 
             int rows=matrix.length;
             int cols=matrix[0].length;
 
-            Graph graph = new Graph(rows,cols);
+            Graph graph = new Graph(rows,cols); //trying to give it the start cordinates
             for(int i=0; i<rows; i++){
                 for(int j=0; j<cols; j++){
                     int typeSymbol = matrix[i][j];
@@ -20,7 +20,7 @@ public class InputHandler {
                         Node n = new Node(i,j, "OBSTACLE");
                         graph.setMapCell(new Point(i,j), n);
                     }
-                    else if(typeSymbol == 8){
+                    else if(current[0]==i && current[1]==j){//start
                         Node n = new Node(i,j, "NORMAL");
                         graph.setMapCell(new Point(i,j), n);
                         graph.setStartPosition(new Point(i,j));
