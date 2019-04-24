@@ -113,9 +113,58 @@ public class Controls {
 
         controlGrid.add(Astar, 0, 8);
 
+        Button DFS = new Button("Use DFS");
+        DFS.setOnAction(event -> {
+            handleDFS();
+        });
+
+        controlGrid.add(DFS, 0, 9);
+
+
 
         return controlGrid;
 
+    }
+
+    private static void handleDFS() {
+        int[][] mymatrix=matrix;
+        InputHandler handler = new InputHandler();
+        Graph graph = null;
+        try {
+            graph = handler.readMap(mymatrix);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidLetterException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Node> path = graph.executeDFS();
+
+        if(path == null){
+            System.out.println("There is no path to target");
+        }
+        else{
+            System.out.println("The total number of moves from distance to the target are : " + path.size());
+            System.out.println("You want to see the whole path to the target ? (y/n) ");
+            Scanner scanner = new Scanner(System.in);
+            String response = scanner.nextLine();
+            if(response.equals("y")){
+                System.out.println("--- Path to target ---");
+                graph.printPath(path);
+                int[][] res=graph.getPathCoord(path);
+                for(int i=1;i<res.length;i++){
+                    //if(i=)
+                    int rowC=res[i][0]-currentCordinates[0];
+                    int colC=res[i][1]-currentCordinates[1];
+                    try {
+                        updateCordGrid(rowC,colC);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
     }
 
     private static void handleAstar()  {
