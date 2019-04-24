@@ -17,7 +17,7 @@ public class A_StarAlgorithm {
             InputHandler handler = new InputHandler();
             Graph graph = handler.readMap(mymatrix);
 
-            ArrayList<Node> path = graph.executeAStar();
+            ArrayList<Node> path = graph.executeDFS();
 
             if(path == null){
                 System.out.println("There is no path to target");

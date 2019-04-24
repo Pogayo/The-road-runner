@@ -153,4 +153,37 @@ public class Graph {
         return null;
     }
 
+    public ArrayList<Node> executeDFS(){
+        Node start = getMapCell(getStartPosition());
+        Node target = getMapCell(getTargetPosition());
+
+        addToOpenNodes(start);
+
+        while(!openNodes.isEmpty()) {
+            Node current = popBestOpenNode(); // will change it later
+            if (current.equals(target)) {
+                ArrayList<Node> path = reconstructPath(target);
+                path.add(target);
+                System.out.println("Goal node found");
+                return path;
+            }
+
+            addToClosedNodes(current);
+            Set<Node> neighbours = getNeighbours(current);
+            //openNodes.addAll(neighbours);
+            for (Node neighbour : neighbours) {
+                if (!neighbour.isClosed()) {
+                    neighbour.setParent(current);
+                    if (!neighbour.isOpen()) {
+                        addToOpenNodes(neighbour);
+                    }
+
+                }
+
+            }
+        }
+        return null;
+
+    }
+
 }
