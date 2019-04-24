@@ -20,6 +20,7 @@ import static sample.Move.*;
 import static sample.GamePlay.*;
 import static sample.ReadFile.*;
 import static sample.Weights.*;
+import static sample.WriteFile.*;
 import static sample.A_StarAlgorithm.*;
 
 public class Controls {
@@ -179,8 +180,12 @@ public class Controls {
                 System.out.println("--- Path to target ---");
                 graph.printPath(path);
                 int[][] res=graph.getPathCoord(path);
+                try {
+                    writeResult(res);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 for(int i=1;i<res.length;i++){
-                    //if(i=)
                     int rowC=res[i][0]-currentCordinates[0];
                     int colC=res[i][1]-currentCordinates[1];
                     try {

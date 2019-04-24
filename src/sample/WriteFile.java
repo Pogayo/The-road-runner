@@ -1,16 +1,14 @@
 package sample;
-//import static sample.*.*;
-
 import java.io.*;
 import java.util.Date;
 
 public class WriteFile {
     public static void writeResult(int[][]path)  throws IOException {
-        String fname=" PerezOgayo_IanObutho_DirectionsforInput#";//_timestamp"
-        String str = "World";
-        fname=fname+".txt";
-       // File myFile;
+        String fname=" PerezOgayo_IanObutho_DirectionsforInput#";
+        Date date= new Date();
 
+        long time = date.getTime();
+        fname=fname+time+".txt";
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fname,true));
@@ -82,7 +80,6 @@ public class WriteFile {
                 return "North-West";
             }
         }
-
         return "";
     }
 }
