@@ -288,8 +288,8 @@ public class Controls {
 
                 }
             }
-            currentCordinates[0] = startCordinates[0]; //;
-            currentCordinates[1] = startCordinates[1]; //// ;
+            currentCordinates[0] = startCordinates[0];
+            currentCordinates[1] = startCordinates[1];
 
             live = false;
 

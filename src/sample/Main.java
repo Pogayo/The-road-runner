@@ -30,8 +30,8 @@ import static sample.Controls.*;
 
 public class Main extends Application {
     static ArrayList<Integer[]> undo = new ArrayList<>();    //structure to store my moves  for undo purposes
-    static int windowWidth = 1000;
-    static int windowHeight = 600;
+    static int windowWidth = 1100;
+    static int windowHeight = 700;
 
     static int noRows = 0;
     static int noColumns = 0;
@@ -157,7 +157,7 @@ public class Main extends Application {
     public static void populateImgGrid() throws FileNotFoundException {  //function that populates the grid with the images at the start or reset
         System.out.println("No rows:"+noRows);
         for (int i = 0; i < noRows; i++) { //for every row
-            for (int j = 0; j < noRows; j++) { //for every colum
+            for (int j = 0; j < noColumns; j++) { //for every colum
                 String imagePath = img.get(matrix[i][j]);
                 grid.add(createImage(imagePath), j, i);
             }
