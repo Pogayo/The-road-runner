@@ -12,7 +12,7 @@ public class Move {
 
     public static void handleKeys(KeyCode key) throws IOException {
 
-        System.out.println("Key Pressed: " + key);
+        //System.out.println("Key Pressed: " + key);
 
         if (live) {
             if (key== KeyCode.UP) {  //I am trying to move up
@@ -45,26 +45,26 @@ public class Move {
     public static void move8(KeyCode key) throws IOException {
 
         if (key == KeyCode.W) {
-            if (currentCordinates[0] > 0 && currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0] - 1][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1] + 1]) {
+            if (validNorthEast()) {
                 updateCordGrid(-1, +1);
             }
 
         }
 
         if (key == KeyCode.S) {
-            if (currentCordinates[0] <= noRows - 2 && currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0] + 1][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1] + 1]) {
+            if (validSouthEast()) {
                 updateCordGrid(1, 1);
             }
 
         }
         if (key == KeyCode.A) {
-            if (currentCordinates[0] <= noRows - 2 && currentCordinates[1] > 0 && matrix[currentCordinates[0] + 1][currentCordinates[1] - 1] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1] - 1]) {
+            if (validSouthWest()) {
                 updateCordGrid(1, -1);
             }
 
         }
         if (key == KeyCode.Q) {
-            if (currentCordinates[0] > 0 && currentCordinates[1] > 0 && matrix[currentCordinates[0] - 1][currentCordinates[1] - 1] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1] - 1]) {
+            if (validNorthWest()) {
                 updateCordGrid(-1, -1);
             }
 
@@ -89,7 +89,6 @@ public class Move {
        prevClone[0]=prevCordinates[0];
        prevClone[1]=prevCordinates[1];
 
-        System.out.println("See me");
         undo.add(prevClone);
 
 
@@ -97,6 +96,7 @@ public class Move {
 
 
     }
+
 
     private static void updateGrid(int[] currentCordinates, int[] prevCordinates) throws IOException {
         int no = matrix[prevCordinates[0]][prevCordinates[1]];
@@ -106,10 +106,7 @@ public class Move {
             scoreUI.setText(String.valueOf(score));
 
         }
-        System.out.println(score);
         if (no != 8 && no != 9) {
-            System.out.println("I am in");
-            System.out.println(no);
             grid.add(createImage(imgAlt.get(no)), prevCordinates[1], prevCordinates[0]);
         } else if (no == 9) {
             grid.add(createImage(img.get(9)), prevCordinates[1], prevCordinates[0]);
@@ -138,8 +135,14 @@ public class Move {
 
                 if ((currentCordinates[1] > 0 && visited[currentCordinates[0]][currentCordinates[1] - 1]) || currentCordinates[1] == 0 || matrix[currentCordinates[0]][currentCordinates[1]-1]  == 1) { //no valid left  move
                     if ((currentCordinates[1] <= noColumns - 2 && visited[currentCordinates[0]][currentCordinates[1] + 1]) || currentCordinates[1] == noColumns - 1 ||matrix[currentCordinates[0]][currentCordinates[1] + 1] == 1 ) { //no valid right  move
+                       if (enable8){
+                           if(!validNorthEast() && !validNorthWest() && !validSouthEast() &&!validSouthWest()){
+                               return true;}
+                       }
+                       else {
+                           return true;
+                       }
 
-                        return true;
                     }
                 }
 
@@ -149,4 +152,21 @@ public class Move {
         return false;
 
     }
+
+    public static boolean validNorthEast(){
+
+        return currentCordinates[0] > 0 && currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0] - 1][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1] + 1];
+
+    }
+    public static boolean validNorthWest(){
+        return currentCordinates[0] > 0 && currentCordinates[1] > 0 && matrix[currentCordinates[0] - 1][currentCordinates[1] - 1] != 1 && !visited[currentCordinates[0] - 1][currentCordinates[1] - 1];
+    }
+
+    public static boolean validSouthEast(){
+        return currentCordinates[0] <= noRows - 2 && currentCordinates[1] <= noColumns - 2 && matrix[currentCordinates[0] + 1][currentCordinates[1] + 1] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1] + 1] ;
+    }
+    public static boolean validSouthWest(){
+        return currentCordinates[0] <= noRows - 2 && currentCordinates[1] > 0 && matrix[currentCordinates[0] + 1][currentCordinates[1] - 1] != 1 && !visited[currentCordinates[0] + 1][currentCordinates[1] - 1];
+    }
 }
+

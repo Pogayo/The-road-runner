@@ -1,4 +1,7 @@
 package sample;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -6,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 
 
 import java.io.File;
@@ -14,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import static sample.Main.*;
 import static sample.Move.*;
@@ -143,7 +148,7 @@ public class Controls {
      handleSearch(0);
 
     }
-    public static void handleSearch(int type){
+    public static void handleSearch(int type)  {
 
         int[][] mymatrix=matrix;
         InputHandler handler = new InputHandler();
@@ -172,30 +177,25 @@ public class Controls {
             System.out.println("There is no path to target");
         }
         else{
-            System.out.println("The total number of moves from distance to the target are : " + path.size());
-            System.out.println("You want to see the whole path to the target ? (y/n) ");
-            Scanner scanner = new Scanner(System.in);
-            String response = scanner.nextLine();
-            if(response.equals("y")){
-                System.out.println("--- Path to target ---");
-                graph.printPath(path);
-                int[][] res=graph.getPathCoord(path);
-                try {
-                    writeResult(res);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                for(int i=1;i<res.length;i++){
-                    int rowC=res[i][0]-currentCordinates[0];
-                    int colC=res[i][1]-currentCordinates[1];
-                    try {
-                        updateCordGrid(rowC,colC);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+            //System.out.println("The total number of moves from distance to the target are : " + (path.size()-1));
+           // System.out.println("--- Path to target ---");
+            //graph.printPath(path); Will print the path on the console
+            int[][] res=graph.getPathCoord(path);
+            try {
+                writeResult(res);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            for(int i=1;i<res.length;i++){
+                int rowC=res[i][0]-currentCordinates[0];
+                int colC=res[i][1]-currentCordinates[1];
+                try{
+                updateCordGrid(rowC,colC);}
+                catch(Exception e){
+                    System.out.println(e);
                 }
             }
+
         }
 
     }

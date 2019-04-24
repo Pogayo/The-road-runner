@@ -46,9 +46,6 @@ public class ReadFile {
             String[] matrixDescription = sCurrentLine.split(" ");
             noRows = Integer.parseInt(matrixDescription[0]);
             noColumns = Integer.parseInt(matrixDescription[1]);
-            System.out.println(noRows);
-            System.out.println(noColumns);
-
             //making the 2d array...
             matrix = new int[noRows][noColumns];
             visited = new boolean[noRows][noColumns];

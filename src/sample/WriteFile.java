@@ -17,9 +17,6 @@ public class WriteFile {
             writer.write("Goal "+path[path.length-1][0]+" "+path[path.length-1][1]+"\n");
             for(int i=1;i<path.length;i++){
                 String move=getMove(path[i-1],path[i]);
-                System.out.println(i);
-                System.out.println(move);
-
                 writer.write(move+"\n");
             }
 
