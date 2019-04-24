@@ -133,48 +133,17 @@ public class Controls {
 
     }
 
-    private static void handleDFS() {
-        int[][] mymatrix=matrix;
-        InputHandler handler = new InputHandler();
-        Graph graph = null;
-        try {
-            graph = handler.readMap(mymatrix,currentCordinates);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidLetterException e) {
-            e.printStackTrace();
-        }
 
-        ArrayList<Node> path = graph.executeDFS();
-
-        if(path == null){
-            System.out.println("There is no path to target");
-        }
-        else{
-            System.out.println("The total number of moves from distance to the target are : " + path.size());
-            System.out.println("You want to see the whole path to the target ? (y/n) ");
-            Scanner scanner = new Scanner(System.in);
-            String response = scanner.nextLine();
-            if(response.equals("y")){
-                System.out.println("--- Path to target ---");
-                graph.printPath(path);
-                int[][] res=graph.getPathCoord(path);
-                for(int i=1;i<res.length;i++){
-                    //if(i=)
-                    int rowC=res[i][0]-currentCordinates[0];
-                    int colC=res[i][1]-currentCordinates[1];
-                    try {
-                        updateCordGrid(rowC,colC);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        }
+    private static void handleDFS() { //0 for A*, 1 for DFS, 2 for Dijkstra
+     handleSearch(1);
     }
 
     private static void handleAstar()  {
+     handleSearch(0);
+
+    }
+    public static void handleSearch(int type){
+
         int[][] mymatrix=matrix;
         InputHandler handler = new InputHandler();
         Graph graph = null;
@@ -185,10 +154,20 @@ public class Controls {
         } catch (InvalidLetterException e) {
             e.printStackTrace();
         }
+        ArrayList<Node> path=new  ArrayList<Node>();
+        if(type==0){
+             path = graph.executeAStar();
+         }
+         else if(type==1){
+             path = graph.executeDFS();
 
-        ArrayList<Node> path = graph.executeAStar();
+         }
+         else if(type==2){
+             path = graph.executeDijkstras();
 
-        if(path == null){
+         }
+
+        if(path == null||path.size()==0){
             System.out.println("There is no path to target");
         }
         else{
