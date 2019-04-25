@@ -87,7 +87,7 @@ public class Main extends Application {
     }
 
 
-    public static HBox createImage(String imagePath) throws FileNotFoundException {
+    public static ImageView createImage(String imagePath) throws FileNotFoundException {
 
 
         String path = imagePath;
@@ -95,27 +95,27 @@ public class Main extends Application {
 
         ImageView imageView = new ImageView(image);  //creating image view
 
-        imageView.setFitHeight(windowWidth / noRows - 30);  //setting the fit height and width of the image view
-        imageView.setFitWidth(windowHeight / noColumns - 30);
-        imageView.getStyleClass().add("imageView");
-        HBox image_container = new HBox();
-        image_container.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClickHandler);
+        imageView.setFitHeight(600 / noRows - 12);  //setting the fit height and width of the image view
+        imageView.setFitWidth(900 / noColumns - 15);
+        //HBox image_container = new HBox();
+        //image_container.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClickHandler);
+        imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClickHandler);
 
-        String style_inner = "-fx-border-color: black;" + "-fx-border-width: 2;" + "-fx-border-style: solid;";
+        //String style_inner = "-fx-border-color: black;" + "-fx-border-width: 2;" + "-fx-border-style: solid;";
 
-        image_container.setStyle(style_inner);
-        image_container.getChildren().add(imageView);
+        //image_container.setStyle(style_inner);
+        //image_container.getChildren().add(imageView);
 
 
         //Setting the preserve ratio of the image view
         imageView.setPreserveRatio(true);
-        return image_container;
+        return imageView;
     }
 
     static EventHandler<MouseEvent> imageClickHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent e) {
-            HBox source = (HBox) e.getSource() ;
+            ImageView source = ( ImageView) e.getSource() ;
             int row=GridPane.getRowIndex(source);
             int col=GridPane.getColumnIndex(source);
             System.out.println("Row: "+row+"\nCol: "+ col);
@@ -150,6 +150,7 @@ public class Main extends Application {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(1);
         grid.setVgap(1);
+        grid.setGridLinesVisible(true);
         populateImgGrid();
         return grid;
     }
