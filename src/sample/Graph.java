@@ -125,11 +125,9 @@ public class Graph {
         int j = (int) to.getY();
         int no = origMatrix[i][j];
         if (no < points.length && no >= 0){
-            System.out.println("I am here");
             return points[no];
 
         }
-        System.out.println("Got here. No is "+ no);
     return 0;
     }
 
@@ -157,7 +155,7 @@ public class Graph {
             Node node = path.get(i);
             result[i][0]=node.getX();
             result[i][1]=node.getY();
-            //System.out.println("node : (" + node.getX() + "," + node.getY() + ")");
+
         }
         return result;
     }
@@ -240,7 +238,7 @@ public class Graph {
         addToOpenNodes(start);
 
         start.setCostFromStart(0);
-        start.setTotalCost( start.getCostFromStart() + calculateDistance(start.getPosition(), target.getPosition()) );
+        start.setTotalCost(0);
         while(!openNodes.isEmpty()){
             Node current = popBestOpenNode();
             if(current.equals(target)){
@@ -251,7 +249,6 @@ public class Graph {
 
             addToClosedNodes(current);
             ArrayList<Node> neighbours = getNeighbours(current);
-            //Set<Node> neighbours = getNeighbours(current);
             for(Node neighbour : neighbours){
                 if(!neighbour.isClosed()){
                     double tentativeCost = current.getCostFromStart() + calculateCost(current.getPosition(),this.origMatrix);
@@ -271,5 +268,6 @@ public class Graph {
         return null;
 
     }
+
 
 }

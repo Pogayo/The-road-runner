@@ -140,6 +140,21 @@ public class Controls {
     }
 
     private static void handleDijkstra() {
+        int min=0;
+        for(int i=0;i<points.length;i++){  // making sure there is no negative number in the weights
+            if(points[i]<min){
+                min=points[i];
+            }
+        }
+        if(min<0){ //there are negative numbers
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Dijkstra Solve not possible");
+            alert.setHeaderText(null);
+            alert.setContentText("Found negative weights. Please make sure you change the weights to positive.");
+            alert.showAndWait();
+
+            return;
+        }
         handleSearch(2);
     }
 
@@ -176,14 +191,19 @@ public class Controls {
              path = graph.executeDijkstra();
 
          }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Search Results");
+        alert.setHeaderText(null);
 
         if(path == null||path.size()==0){
-            System.out.println("There is no path to target");
+            alert.setContentText("Sorry, we could not find a  path to target");
+
         }
         else{
             //System.out.println("The total number of moves from distance to the target are : " + (path.size()-1));
            // System.out.println("--- Path to target ---");
             //graph.printPath(path); Will print the path on the console
+            alert.setContentText("The problem is solvable!\nThe total number of moves from distance to the target are : " + (path.size()-1));
             int[][] res=graph.getPathCoord(path);
             try {
                 writeResult(res);
@@ -201,6 +221,7 @@ public class Controls {
             }
 
         }
+        alert.showAndWait();
 
     }
 
