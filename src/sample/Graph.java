@@ -1,10 +1,7 @@
 package sample;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static sample.Main.enable8;
 
@@ -48,8 +45,11 @@ public class Graph {
         targetPosition.setLocation(coord);
     }
 
-    public int getDimension(){
+    public int getDimensionX(){
         return map.length;
+    }
+    public int getDimensionY(){
+        return map[0].length;
     }
 
     public void addToOpenNodes(Node n){
@@ -67,11 +67,13 @@ public class Graph {
     }
 
     public boolean isInsideMap(Point p){
-        return ( (p.getX() >= 0) && (p.getX() < getDimension())  && (p.getY() >= 0) && (p.getY() < getDimension()) );
+        return ( (p.getX() >= 0) && (p.getX() < getDimensionX())  && (p.getY() >= 0) && (p.getY() < getDimensionY()) );
     }
 
-    public Set<Node> getNeighbours(Node n){  //will return different results based on the situation of enabled 8
-        Set<Node> neighbours = new HashSet<Node>();
+    public ArrayList<Node> getNeighbours(Node n){  //will return different results based on the situation of enabled 8
+        //Set<Node> neighbours = new HashSet<Node>();
+        ArrayList<Node> neighbours = new ArrayList<>();
+
         //IF ENABLE EIGHT ...
         if(enable8) {
             for (int i = -1; i <= 1; i++) {
@@ -98,7 +100,7 @@ public class Graph {
 
                 }
             }
-            for(int i=-1; i<=1; i++){ //columns
+            for(int i=-1; i<=1; i++){ //rows
                 if(!(i==0)){
                     if(isInsideMap(new Point(n.getX()+i ,n.getY() ))){
                         Node temp = getMapCell(new Point(n.getX()+i ,n.getY() ));
@@ -161,7 +163,8 @@ public class Graph {
             }
 
             addToClosedNodes(current);
-            Set<Node> neighbours = getNeighbours(current);
+            ArrayList<Node> neighbours = getNeighbours(current);
+            //Set<Node> neighbours = getNeighbours(current);
             for(Node neighbour : neighbours){
                 if(!neighbour.isClosed()){
                     double tentativeCost = current.getCostFromStart() + calculateDistance(current.getPosition(), neighbour.getPosition());
@@ -184,11 +187,12 @@ public class Graph {
     public ArrayList<Node> executeDFS(){
         Node start = getMapCell(getStartPosition());
         Node target = getMapCell(getTargetPosition());
+        ArrayList<Node> stack=new ArrayList<>();
 
-        addToOpenNodes(start);
+        stack.add(start);
 
-        while(!openNodes.isEmpty()) {
-            Node current = popBestOpenNode(); // will change it later
+        while(!stack.isEmpty()) {
+            Node current=stack.remove(stack.size()-1);
             if (current.equals(target)) {
                 ArrayList<Node> path = reconstructPath(target);
                 path.add(target);
@@ -197,13 +201,14 @@ public class Graph {
             }
 
             addToClosedNodes(current);
-            Set<Node> neighbours = getNeighbours(current);
-            //openNodes.addAll(neighbours);
+            ArrayList<Node> neighbours = getNeighbours(current);
+
             for (Node neighbour : neighbours) {
                 if (!neighbour.isClosed()) {
                     neighbour.setParent(current);
                     if (!neighbour.isOpen()) {
-                        addToOpenNodes(neighbour);
+                        neighbour.setOpen();
+                        stack.add(neighbour);
                     }
 
                 }
