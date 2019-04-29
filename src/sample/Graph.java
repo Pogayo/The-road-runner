@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.*;
 
 import static sample.Main.enable8;
+import static sample.Main.points;
 
 public class Graph {
 
@@ -12,13 +13,15 @@ public class Graph {
     private Point targetPosition;
     private Heap<Node> openNodes;
     private Set<Node> closedNodes;
+    public int[][] origMatrix;
 
-    public Graph(int noRows, int noCols){
+    public Graph(int noRows, int noCols, int [][] matrix){
         map = new Node[noRows][noCols];
         startPosition = new Point();
         targetPosition = new Point();
         openNodes = new Heap<Node>();
         closedNodes = new HashSet<Node>();
+        this.origMatrix=matrix;
     }
 
     public Node getMapCell(Point coord){
@@ -116,6 +119,18 @@ public class Graph {
 
     static double calculateDistance(Point from, Point to){
         return Math.pow(Math.pow(from.getX()-to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) , 0.5);
+    }
+    static double calculateCost(Point to, int [][] origMatrix) {
+        int i = (int) to.getX();
+        int j = (int) to.getY();
+        int no = origMatrix[i][j];
+        if (no < points.length && no >= 0){
+            System.out.println("I am here");
+            return points[no];
+
+        }
+        System.out.println("Got here. No is "+ no);
+    return 0;
     }
 
     public ArrayList<Node> reconstructPath(Node target){
@@ -218,13 +233,42 @@ public class Graph {
         return null;
 
     }
-    public ArrayList<Node> executeDijkstras(){
+    public ArrayList<Node> executeDijkstra(){
 
         Node start = getMapCell(getStartPosition());
         Node target = getMapCell(getTargetPosition());
-
         addToOpenNodes(start);
-        return new ArrayList<Node>();
+
+        start.setCostFromStart(0);
+        start.setTotalCost( start.getCostFromStart() + calculateDistance(start.getPosition(), target.getPosition()) );
+        while(!openNodes.isEmpty()){
+            Node current = popBestOpenNode();
+            if(current.equals(target)){
+                ArrayList<Node> path=reconstructPath(target);
+                path.add(target);
+                return path;
+            }
+
+            addToClosedNodes(current);
+            ArrayList<Node> neighbours = getNeighbours(current);
+            //Set<Node> neighbours = getNeighbours(current);
+            for(Node neighbour : neighbours){
+                if(!neighbour.isClosed()){
+                    double tentativeCost = current.getCostFromStart() + calculateCost(current.getPosition(),this.origMatrix);
+
+                    if( (!neighbour.isOpen()) || (tentativeCost < neighbour.getCostFromStart()) ){
+                        neighbour.setParent(current);
+                        neighbour.setCostFromStart(tentativeCost);
+                        neighbour.setTotalCost(neighbour.getCostFromStart() + calculateDistance(neighbour.getPosition(), start.getPosition()));
+                        if(!neighbour.isOpen())
+                            addToOpenNodes(neighbour);
+                    }
+                }
+
+            }
+        }
+
+        return null;
 
     }
 

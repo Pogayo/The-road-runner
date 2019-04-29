@@ -128,7 +128,7 @@ public class Controls {
 
         Button djikstra = new Button("Solve with Djikstra");
         djikstra.setOnAction(event -> {
-           // handleDFS();
+           handleDijkstra();
         });
 
         controlGrid.add(djikstra, 0, 10);
@@ -137,6 +137,10 @@ public class Controls {
 
         return controlGrid;
 
+    }
+
+    private static void handleDijkstra() {
+        handleSearch(2);
     }
 
 
@@ -169,7 +173,7 @@ public class Controls {
 
          }
          else if(type==2){
-             path = graph.executeDijkstras();
+             path = graph.executeDijkstra();
 
          }
 

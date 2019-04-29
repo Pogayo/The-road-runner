@@ -12,7 +12,7 @@ public class InputHandler {
             int rows=matrix.length;
             int cols=matrix[0].length;
 
-            Graph graph = new Graph(rows,cols); //trying to give it the start cordinates
+            Graph graph = new Graph(rows,cols,matrix); //trying to give it the start cordinates
             for(int i=0; i<rows; i++){
                 for(int j=0; j<cols; j++){
                     int typeSymbol = matrix[i][j];
